@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class IsUnique {
+public class Ex1_1_IsUnique {
     /*
     IsUnique: Implement an algorithm to determine if a string has all unique characters.
     What if you cannot use additional data structure.
