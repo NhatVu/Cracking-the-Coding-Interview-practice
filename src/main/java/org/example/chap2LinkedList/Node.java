@@ -7,4 +7,11 @@ public class Node {
         data = d;
         next = null;
     }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "data=" + data +
+                '}';
+    }
 }
