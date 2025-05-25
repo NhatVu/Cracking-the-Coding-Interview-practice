@@ -1,75 +1,76 @@
 package org.example.chap3StackQueue;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 /*
 correct but not optimal solution
 https://leetcode.com/problems/dinner-plate-stacks/description/
  */
-public class Ex3_3_StackOfPlate {
+public class Ex3_3_StackOfPlate_Optimize {
 
     // list of stack, will push value from index 0
     List<Deque<Integer>> stackList = new ArrayList<>();
     int capacity;
+    TreeSet<Integer> availablePush = new TreeSet<>(); // keep index of stack that available for pushing
+    int rightMost = -1; // rightMost position of stack, using for pop
 
-    public Ex3_3_StackOfPlate(int capacity){
+    public Ex3_3_StackOfPlate_Optimize(int capacity){
         this.capacity = capacity;
     }
 
     public void push(int value){
-        if(stackList.isEmpty()){
-            Deque<Integer> deque = new ArrayDeque<>();
-            deque.addLast(value);
-            stackList.add(deque);
-        }else{
-            for(int i = 0; i < stackList.size(); i++){
-                if(stackList.get(i).size() < capacity){
-                    stackList.get(i).addLast(value);
-                    return;
-                }
-            }
+        int index = availablePush.isEmpty() ? stackList.size() : availablePush.first();
 
-            Deque<Integer> deque = new ArrayDeque<>();
-            deque.addLast(value);
-            stackList.add(deque);
+        if(index >= stackList.size()){
+            stackList.add(new ArrayDeque<>());
+            availablePush.add(index);
         }
+
+        stackList.get(index).addLast(value);
+        // check size of stack after added
+        if(stackList.get(index). size() >= capacity){
+            availablePush.remove(index);
+        }
+
+        // udpate rightMost
+        rightMost = Math.max(rightMost, index);
     }
 
     public int pop(){
-        if(stackList.isEmpty()){
+        while (rightMost >= 0 && (stackList.get(rightMost).isEmpty())){
+            rightMost--;
+        }
+
+        if(rightMost < 0){
             return -1;
         }
 
-        int lastIndex = stackList.size() - 1;
-        int res = -1;
-        for(int i = lastIndex; i >= 0; i--){
-             res = popAtStack(i);
-            if(res != - 1){
-                break;
-            }
+        int val = stackList.get(rightMost).pollLast();
 
-            stackList.remove(i);
-        }
-        return res;
+        // update avaiablePush
+        availablePush.add(rightMost);
+        return val;
     }
 
     public int popAtStack(int index){
-        if(index >= stackList.size()){
+        if(index < 0 || index >= stackList.size() || stackList.get(index).isEmpty()){
             return -1;
         }
 
-        Deque<Integer> deque = stackList.get(index);
-        if(deque.isEmpty()){
-            return -1;
+        int val = stackList.get(index).pollLast();
+        availablePush.add(index);
+
+        // update rightMost
+        if(index == rightMost){
+            while (rightMost >= 0 && stackList.get(rightMost).isEmpty()){
+                rightMost--;
+            }
         }
-        return deque.pollLast();
+        return val;
     }
 
     public static void main(String[] args) {
-        Ex3_3_StackOfPlate D = new Ex3_3_StackOfPlate(2);  // Initialize with capacity = 2
+        Ex3_3_StackOfPlate_Optimize D = new Ex3_3_StackOfPlate_Optimize(2);  // Initialize with capacity = 2
         D.push(1);
         D.push(2);
         D.push(3);
