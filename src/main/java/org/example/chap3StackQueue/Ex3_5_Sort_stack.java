@@ -2,7 +2,7 @@ package org.example.chap3StackQueue;
 
 import java.util.Stack;
 
-public class Ex_3_5_Sort_stack {
+public class Ex3_5_Sort_stack {
     /*
     https://www.geeksforgeeks.org/sort-stack-using-temporary-stack/
      */
@@ -32,7 +32,7 @@ public class Ex_3_5_Sort_stack {
     result: [3, 23, 31, 34, 92, 98]
      */
     public static void main(String[] args) {
-        Ex_3_5_Sort_stack solution = new Ex_3_5_Sort_stack();
+        Ex3_5_Sort_stack solution = new Ex3_5_Sort_stack();
         Stack<Integer> origin = new Stack<>();
         origin.push(34);
         origin.push(3);
